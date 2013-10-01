@@ -12,8 +12,8 @@ begin
     gemspec.authors = ["Troels Knak-Nielsen"]
     gemspec.license = 'MIT'
     gemspec.add_dependency 'mysql2', ['~> 0.3.13']
-    gemspec.files.include = 'lib/**/*.rb'
-    gemspec.files.include = 'bin/**/*'
+    gemspec.files.include 'lib/**/*.rb'
+    gemspec.files.include 'bin/**/*'
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError => err
