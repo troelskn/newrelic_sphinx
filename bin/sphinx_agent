@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift(File.expand_path(File.dirname(File.dirname(__FILE__))))
+require 'lib/newrelic_sphinx/agent'
+require 'optparse'
+
+options = {}
+opt_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{__FILE__} --license LICENSE [options]"
+
+  opts.on("--license LICENSE", "New Relic License key") do |license_key|
+    options[:license_key] = license_key
+  end
+
+  opts.on("--host [HOST]", "Sphinx hostname") do |host|
+    options[:host] = host
+  end
+
+  opts.on("--port [PORT]", Integer, "Sphinx port number") do |port|
+    options[:port] = port
+  end
+
+  opts.on("--username [USERNAME]", "Username to connect to Sphinx") do |username|
+    options[:username] = username
+  end
+
+  opts.on("--endpoint [ENDPOINT]", "URL endpoint to post data back to") do |endpoint|
+    options[:endpoint] = endpoint
+  end
+
+  opts.on("--frequenzy [FREQUENZY]", Integer, "Delay in sec. between each send") do |frequenzy|
+    options[:frequenzy] = frequenzy
+  end
+
+  opts.on("--hostname [HOSTNAME]", "Hostname to identify the machine with New Relic") do |hostname|
+    options[:hostname] = hostname
+  end
+
+  # No argument, shows at tail.  This will print an options summary.
+  # Try it and see!
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end
+
+opt_parser.parse! ARGV
+raise "Missing license key" unless options[:license_key]
+
+agent = NewrelicSphinx::Agent.new options
+while true
+  agent.execute
+  sleep 4
+end
+
