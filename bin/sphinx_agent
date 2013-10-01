@@ -35,6 +35,10 @@ opt_parser = OptionParser.new do |opts|
     options[:hostname] = hostname
   end
 
+  opts.on("--verbose", "Dump debug info to console") do
+    options[:verbose] = true
+  end
+
   # No argument, shows at tail.  This will print an options summary.
   # Try it and see!
   opts.on_tail("-h", "--help", "Show this message") do
@@ -47,8 +51,4 @@ opt_parser.parse! ARGV
 raise "Missing license key" unless options[:license_key]
 
 agent = NewrelicSphinx::Agent.new options
-while true
-  agent.execute
-  sleep 4
-end
-
+agent.run

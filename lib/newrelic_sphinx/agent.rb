@@ -41,6 +41,7 @@ module NewrelicSphinx
         :reconnect => true
       }
 
+      @verbose = configuration[:verbose]
       @client = Mysql2::Client.new(options)
       @license_key = configuration[:license_key]
       @host = configuration[:hostname] || `hostname`
@@ -63,6 +64,8 @@ module NewrelicSphinx
     end
 
     def run
+      update_metrics
+      @last = Time.now
       while true
         execute
         sleep 1
@@ -70,18 +73,16 @@ module NewrelicSphinx
     end
 
     def execute
-      send_stats(build_metrics) if @last.nil? || since_last > @frequenzy
+      puts "*** execute" if @version
+      send_stats(build_metrics) if since_last > @frequenzy
     end
 
     def since_last
-      if @last.nil?
-        0
-      else
-        Time.now - @last
-      end
+      Time.now - @last
     end
 
     def send_stats(metrics)
+      puts "*** send_stats" if @version
       data = {
         'agent' => {
           'host' => @host,
@@ -102,7 +103,13 @@ module NewrelicSphinx
       request["Content-Type"] = "application/json"
       request["Accept"] = "application/json"
       request["X-License-Key"] = @license_key
-      response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http = Net::HTTP.new(uri.hostname, uri.port)
+      if uri.scheme == 'https'
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      http.set_debug_output $stderr if @verbose
+      response = http.start do |http|
         http.request(request)
       end
       update_state if response.kind_of? Net::HTTPSuccess
