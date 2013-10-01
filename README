@@ -1,0 +1,17 @@
+Plugin agent for New Relic that logs stats from a running Sphinx server.
+
+Basically a Ruby reimplementation of https://github.com/yvasiyarov/newrelic_sphinx which I couldn't get to work.
+
+Install:
+
+    gem install newrelic_sphinx
+
+Start with:
+
+    sphinx_agent --license YOUR_LICENSE_KEY_HERE --verbose
+
+If everything looks good, demonize with:
+
+    nohup sphinx_agent --license YOUR_LICENSE_KEY_HERE &
+
+MIT license, Troels Knak-Nielsen 2013
