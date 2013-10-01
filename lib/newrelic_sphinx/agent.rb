@@ -146,9 +146,9 @@ module NewrelicSphinx
       @metrics.each do |m|
         raise "Missing metric #{m.name}" if m.value.nil?
         if m.incremental?
-          struct["#{m.name}[#{m.units}]"] = m.value - m.last_value
+          struct["Component/#{m.name}[#{m.units}]"] = m.value - m.last_value
         else
-          struct["#{m.name}[#{m.units}]"] = m.value
+          struct["Component/#{m.name}[#{m.units}]"] = m.value
         end
       end
       struct
