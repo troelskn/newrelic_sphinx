@@ -41,13 +41,13 @@ module NewrelicSphinx
         :reconnect => true
       }
 
-      @verbose = configuration[:verbose]
+      @verbose = !! configuration[:verbose]
       @client = Mysql2::Client.new(options)
       @license_key = configuration[:license_key]
       @host = configuration[:hostname] || `hostname`
       @endpoint = configuration[:endpoint] || "https://platform-api.newrelic.com/platform/v1/metrics"
       @frequenzy = configuration[:frequenzy] || 20
-      @component_name = 'Crawler Control'
+      @component_name = 'Sphinx Stats'
       @component_guid = 'com.github.troelskn.Sphinx'
       @version = '0.0.1'
       @metrics = []
@@ -73,7 +73,7 @@ module NewrelicSphinx
     end
 
     def execute
-      puts "*** execute" if @version
+      puts "*** execute" if @verbose
       send_stats(build_metrics) if since_last > @frequenzy
     end
 
@@ -82,7 +82,7 @@ module NewrelicSphinx
     end
 
     def send_stats(metrics)
-      puts "*** send_stats" if @version
+      puts "*** send_stats" if @verbose
       data = {
         'agent' => {
           'host' => @host,
