@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "bin/sphinx_agent",
-    "lib/newrelic_sphinx/agent.rb"
+    "lib/newrelic_sphinx/agent.rb",
+    "newrelic_sphinx.gemspec"
   ]
   s.homepage = "http://github.com/troelskn/newrelic_sphinx"
   s.licenses = ["MIT"]
